@@ -1,3 +1,8 @@
+:hp-tags: asciidoctor, reference
+:hp-image: a-cover-image.jpg
+:published_at: 2015-01-31
+
+
 = asciidoctor-fopub
 Dan Allen <https://github.com/mojavelinux>
 v0.2.0, 2013-11-27
