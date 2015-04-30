@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>asciidoctor-fopub</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="//4711.github.io/hubpress.io/themes/Casper/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//4711.github.io/hubpress.io/themes/Casper/assets/css/screen.css?v=1.0.0" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <link rel="canonical" href="https://4711.github.io/hubpress.io/2015/04/30/asciidoctor-fopub.html" />
+    
+    <meta property="og:site_name" content="My Blog" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="asciidoctor-fopub" />
+    <meta property="og:description" content="DocBook-to-PDF conversion using free software made easy! (based on DocBook XSL and Apache FOP) Using the asciidoctor-fopub project, you can convert any DocBook file into a nicely formatted PDF with nothing more than a Java runtime (JVM) and development kit..." />
+    <meta property="og:url" content="https://4711.github.io/hubpress.io/2015/04/30/asciidoctor-fopub.html" />
+    <meta property="article:published_time" content="2015-04-29T22:00:00.000Z" />
+    <meta property="article:modified_time" content="2015-04-30T13:15:52.322Z" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="asciidoctor-fopub" />
+    <meta name="twitter:description" content="DocBook-to-PDF conversion using free software made easy! (based on DocBook XSL and Apache FOP) Using the asciidoctor-fopub project, you can convert any DocBook file into a nicely formatted PDF with nothing more than a Java runtime (JVM) and development kit..." />
+    <meta name="twitter:url" content="https://4711.github.io/hubpress.io/2015/04/30/asciidoctor-fopub.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "My Blog",
+    "author": {
+        "@type": "Person",
+        "image": "https://avatars.githubusercontent.com/u/1145187?v=3",
+        "url": "undefined/author/undefined"
+    },
+    "headline": "asciidoctor-fopub",
+    "url": "https://4711.github.io/hubpress.io/2015/04/30/asciidoctor-fopub.html",
+    "datePublished": "2015-04-29T22:00:00.000Z",
+    "dateModified": "2015-04-30T13:15:52.322Z",
+    "description": "DocBook-to-PDF conversion using free software made easy! (based on DocBook XSL and Apache FOP) Using the asciidoctor-fopub project, you can convert any DocBook file into a nicely formatted PDF with nothing more than a Java runtime (JVM) and development kit..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="My Blog" href="https://4711.github.io/hubpress.io/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+</head>
+<body class="post-template">
+
+    
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="https://4711.github.io/hubpress.io">Home</a>
+        <!-- <a class="subscribe-button icon-feed" href="https://4711.github.io/hubpress.io/rss/">Subscribe</a> -->
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">asciidoctor-fopub</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2015-04-30">30 April 2015</time> 
+            </section>
+        </header>
+
+        <section class="post-content">
+            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>DocBook-to-PDF conversion using free software made easy! (based on DocBook XSL and Apache FOP)</p>
+</div>
+<div class="paragraph">
+<p>Using the asciidoctor-fopub project, you can convert any DocBook file into a nicely formatted PDF with nothing more than a Java runtime (JVM) and development kit (JDK).
+All the open source software required to perform the conversion is automatically fetched from the internet the first time you run it.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="doing-is-believing">Doing is believing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before we get into the goals and the technical details of the project, let&#8217;s see the conversion in action!</p>
+</div>
+<div class="sect2">
+<h3 id="prerequisites">Prerequisites</h3>
+<div class="paragraph">
+<p>The only prerequisite to perform the DocBook to PDF conversion is a Java Development Kit (JDK), which includes the Java runtime (and, naturally, an internet connection).
+You can use any recent JDK (i.e., Java SE 6 or better).</p>
+</div>
+<div class="paragraph">
+<p>If Java runtime (JVM) is setup correctly, you should be able to type:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ java -version</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ "$JAVA_HOME/bin/java -version"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and see output that looks like:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>java version "1.7.0_25"
+OpenJDK Runtime Environment (fedora-2.3.10.3.fc17-x86_64)
+OpenJDK 64-Bit Server VM (build 23.7-b01, mixed mode)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the Java Devlopment Kit (JDK) is setup correctly, you should be able to type:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ javac -version</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ "$JAVA_HOME"/bin/javac -version"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and see output that looks like:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>javac 1.7.0_25</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If not, you can install a JDK using your system&#8217;s package manager or by downloading a distribution from the <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Java for developers download site</a>.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+You may encounter problems if you attempt to use the GNU compiler for Java (gcj).
+We recommend using OpenJDK or Oracle Java.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+It&#8217;s not even necessary to install the JDK on your system.
+Simply set the JAVA_HOME environment variable to the location where you extract the distribution.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Next, you need to retrieve the asciidoctor-fopub project.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="retrieve-the-project">Retrieve the project</h3>
+<div class="paragraph">
+<p>You can retrieve the asciidoctor-fopub project in one of two ways:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Clone the git repository</p>
+</li>
+<li>
+<p>Download a zip archive of the repository</p>
+</li>
+</ol>
+</div>
+<div class="sect3">
+<h4 id="option-1-fetch-using-git-clone">Option 1: Fetch using git clone</h4>
+<div class="paragraph">
+<p>If you want to clone the git repository, simply copy the URL of the repository on GitHub and pass it to git clone command:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ git clone https://github.com/asciidoctor/asciidoctor-fopub</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, change to the project directory:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ cd asciidoctor-fopub</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="option-2-download-the-archive">Option 2: Download the archive</h4>
+<div class="paragraph">
+<p>If you want to download a zip archive, click on the <b class="button">Download Zip</b> button on the right-hand side of the repository page on GitHub.
+Once the download finishes, extract the archive, open a console and change to that directory.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Instead of working out of the asciidoctor-fopub directory, you can simply add the directory to your PATH environment variable.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Next, let&#8217;s grab a file to convert.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="generate-a-docbook-file">Generate a DocBook file</h3>
+<div class="paragraph">
+<p>If you don&#8217;t already have a DocBook file, you can generate one using <a href="http://asciidoctor.org">Asciidoctor</a> (or your tool of choice).</p>
+</div>
+<div class="paragraph">
+<p>To create a DocBook file using Asciidoctor, first create an AsciiDoc file named <em class="file">sample.adoc</em> in the current directory and populate it the sample content below.</p>
+</div>
+<div class="listingblock">
+<div class="title">sample.adoc</div>
+<div class="content">
+<pre class="highlight"><code class="language-asciidoc" data-lang="asciidoc">= Document Title
+Doc Writer &lt;doc@example.com&gt;
+
+A sample http://asciidoc.org[AsciiDoc] document.
+
+== Introduction
+
+A paragraph followed by a simple list.
+
+* item 1
+* item 2
+
+Here's how you say ``Hello, World!'' in Ruby.
+
+.A basic Ruby application
+[source,ruby]
+puts "Hello, World!"
+
+TIP: asciidoctor-fopub takes the pain out of converting a DocBook file to a PDF file like this one.
+All you need is a Java Development Kit (JDK) and this project.
+The rest of the software is fetched and configured by Gradle.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Convert the AsciiDoc file to DocBook using the asciidoctor (or asciidoc) command:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ asciidoctor -b docbook -d book sample.adoc</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should now see a file named <em class="file">sample.xml</em> in the current directory.</p>
+</div>
+<div class="paragraph">
+<p>It&#8217;s time to convert it to PDF!</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You could also try these steps using the <em class="file">README.adoc</em> file in the root directory of the project.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="convert-docbook-to-pdf">Convert DocBook to PDF</h3>
+<div class="paragraph">
+<p>We&#8217;re now ready to do the conversion!
+It&#8217;s as simple as running the fopub script in the current directory on our DocBook file.</p>
+</div>
+<div class="paragraph">
+<p>On Unix-based systems (e.g., Linux, OSX), run:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ ./fopub sample.xml</pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Since we&#8217;re executing a local script, you need to prefix the name of the command with ./.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+If you&#8217;ve added the path to asciidoctor-fopub to your PATH environment variable, you can leave off the ./ and execute it from any directory.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>On Windows, run:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ fopub sample.xml</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The first time you run the command, asciidoctor-fopub has to retrieve the software from the repositories and setup the conversion application, so be patient.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When it&#8217;s all said and done, you should now see the file <span class="file">sample.pdf</span> in the current directory.
+Open that file with a PDF viewer to see the result.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/sample-pdf-screenshot.png" alt="Screenshot of sample PDF document">
+</div>
+<div class="title">Figure 1. Sample PDF document rendered in viewer</div>
+</div>
+<div class="paragraph">
+<p>As you can see, all the details of the conversion are hidden behind the scenes.
+You get to focus on getting the job done, not worry about the mess that has to be sorted out to use Apache FOP correctly and get a decent-looking document.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="custom-xsl-parameters">Custom XSL parameters</h3>
+<div class="paragraph">
+<p>Any arguments that follow the source file name are passed directly to the Apache FO processor (fop).
+This feature allows you to assign XSL parameters, among other things.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s say you want to set the orientation of the PDF to landscape.
+The DocBook XSL templates recognize the parameter named page.orientation.
+Here&#8217;s how you would pass that through fopub to fop.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ ./fopub sample.xml -param page.orientation landscape</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You&#8217;ll now notice that the PDF generated is rendered in landscape mode.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+See <a href="http://docbook.sourceforge.net/release/xsl/1.78.1/doc/param.html">DocBook XSL parameter reference</a> for a list of all XSL parameters you can set.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+Custom parameters are currently only implemented in the Unix version of the fopub script.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="custom-xsl-templates">Custom XSL templates</h3>
+<div class="paragraph">
+<p>When you work on many documentations projets in <strong>parallel</strong>, you will probably need different outputs.</p>
+</div>
+<div class="dlist">
+<div class="title">Use cases for different templates</div>
+<dl>
+<dt class="hdlist1">structure</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>One needs a picture in the book title page</p>
+</li>
+<li>
+<p>The other needs a special text at the bottom of this page</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">style</dt>
+<dd>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>One needs the default Asciidoctor style</p>
+</li>
+<li>
+<p>The other uses the Colony style</p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>In order to work on different documentation projects <em>in parallel</em>, you need to have different docbook-xsl directories.</p>
+</div>
+<div class="paragraph">
+<p>How it works:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Copy the docbook-xsl directory from the fopub install directory to your documentation path, <em class="file">/path/to/custom/fopub</em>.</p>
+<div class="imageblock">
+<div class="content">
+<img src="/images/docbook-xsl-content.png" alt="Content of docbook-xsl directory">
+</div>
+<div class="title">Figure 2. Content of the docbook-xsl directory</div>
+</div>
+</li>
+<li>
+<p>Update the files you want in this directory</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">For example if you want to use Colony style</dt>
+<dd>
+<p>You delete Asciidoctor theme, Foundation theme and you uncomment Colony theme in the common.xsl file.</p>
+</dd>
+</dl>
+</div>
+</li>
+<li>
+<p>Then you specify this directory when you launch the output generation :</p>
+<div class="literalblock">
+<div class="content">
+<pre>$ /path/to/fopub/fopub -t /path/to/custom/fopub/docbook-xsl sample.xml</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="fopub-option-flags">fopub option flags</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">-t &lt;path&gt;</dt>
+<dd>
+<p>tells fopub which docbook-xsl directory to use (optional, defaults to location inside fopub installation)</p>
+</dd>
+<dt class="hdlist1">-f [pdf|ps|fo]</dt>
+<dd>
+<p>tells fopub which output to produce (optional, defaults to pdf)</p>
+</dd>
+<dt class="hdlist1">-h</dt>
+<dd>
+<p>prints usage</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="motivation">Motivation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The asciidoctor-fopub project aims to provide a simple mechanism for converting DocBook to PDF.
+The plan is to use some form of this project to handle the DocBook to PDF conversion in <a href="http://asciidoctor.org">Asciidoctor</a>.
+We hope it&#8217;s generally useful outside of Asciidoctor as well.</p>
+</div>
+<div class="paragraph">
+<p>If you&#8217;ve ever had to do this conversion, you will appreciate how overly-complex it is.
+It requires fetching the right combination of software (including the right versions), putting all the files in the right location and associating them together using a catalog and passing in the correct parameters.
+<em>It&#8217;s boring and tedious.</em>
+This project handles all that magic so you don&#8217;t have to.</p>
+</div>
+<div class="paragraph">
+<p>In addition to making the conversion work, the project includes the following features that are often left out:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Works with DocBook generated by AsciiDoc (supports all AsciiDoc processing instructions)</p>
+</li>
+<li>
+<p>Syntax highlights source code listings using <a href="http://sourceforge.net/projects/xslthl">XSLTHL</a> (including a highlighter for AsciiDoc source)</p>
+</li>
+<li>
+<p>Scales down images to fit within the width of the page</p>
+</li>
+<li>
+<p>Applies (configurable) formatting and styling that&#8217;s consistent with the Asciidoctor themes</p>
+</li>
+<li>
+<p>Loads and embeds system fonts necessary to support the themes (Arial, Georgia and Liberation Mono)</p>
+</li>
+<li>
+<p>Applies configuration to embed SVG-based admonition icons and callout marks</p>
+</li>
+<li>
+<p>Works without an internet connection (once the initial run is complete); <em>drastically speeds up execution</em></p>
+</li>
+<li>
+<p>Works from any directory (planned)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There&#8217;s a lot of research that went into making all that happen for you :)</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+One of the most important features of this tool&#8212;&#8203;and one of the most difficult to get right&#8212;&#8203;is that it works offline.
+By default, XSL processors fetch all necessary resources from the internet.
+Since these files are large and reference many other files, fetching them from the internet is exceptionally slow and a waste of network bandwidth.
+The fopub tool carefully ensures that the processor has all the files it needs (on the first run) and thus keeps it from reaching out to the internet while it performs the conversion.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="technical-details">Technical details</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s talk tech.</p>
+</div>
+<div class="sect2">
+<h3 id="the-conversion-s-key-players-apache-fop-and-docbook-xsl">The conversion&#8217;s key players: Apache FOP and DocBook XSL</h3>
+<div class="paragraph">
+<p>The main goal of this project is to download, configure and execute <a href="http://xmlgraphics.apache.org/fop">Apache FOP</a> to handle the conversion from DocBook to PDF using the <a href="http://en.wikipedia.org/wiki/DocBook_XSL">DocBook XSL</a> stylesheets.
+You can see from the first part of the <a href="http://www.sagehill.net/docbookxsl">DocBook XSL book</a> what a complex proposition this is.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">DocBook XSL</dt>
+<dd>
+<p>The purpose of DocBook XSL is to provide a standard set of XML transformations (XSLT) from DocBook to several presentational formats, one of which is XSL-FO.</p>
+</dd>
+<dt class="hdlist1">Apache FOP</dt>
+<dd>
+<p>Apache FOP (Formatting Objects Processor) is a print formatter driven by XSL formatting objects (XSL-FO) and an output independent formatter.
+It is a Java application that reads a formatting object (FO) tree and renders the resulting pages to a specified output.
+The primary output target is PDF.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Apache FOP also includes an XSLT processor (Xalan) that handles the conversion from DocBook into the intermediatory XSL-FO format that the print formatter uses to create the PDF.</p>
+</div>
+<div class="paragraph">
+<p>When the software is all setup, we are ultimately running a command in the fopub script similar to this one:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ fop -xml sample.xml -xsl docbook-xsl/fo-pdf.xsl -pdf sample.pdf</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In reality, it&#8217;s more complex.
+You can see the full command at the bottom of the fopub script.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="source-highlighting-using-xslthl">Source highlighting using XSLTHL</h3>
+<div class="paragraph">
+<p>Readers have come to expect source code to be highlighted so it looks the same way in the document as it does in their source code editors.
+<a href="http://sourceforge.net/projects/xslthl">XSLTHL</a> provides source highlighting for PDF output.</p>
+</div>
+<div class="paragraph">
+<p>XSLTHL integration is a well-hidden feature in the DocBook XSL project.
+It requires a Java-based XSLT processor (like the one embedded in Apache FOP) to use it.
+Activating it requires passing special parameters to the processor that specify the location of the configuration file and a flag to turn it on.</p>
+</div>
+<div class="paragraph">
+<p>When everything falls into place, as it does with the fopub script, you get nice syntax highlighting in your PDF file and happy readers.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="priming-the-pump-with-gradle">Priming the pump with Gradle</h3>
+<div class="paragraph">
+<p>Setting up a Java application is no small feat.
+So what fetches the software and puts it all in the right place?
+That handywork is performed by Gradle.</p>
+</div>
+<div class="paragraph">
+<p><a href="http://www.gradle.org">Gradle</a> is a Java-based automation and build tool that specializes in setting up Java applications (among other capabilities).
+Gradle can fetch files from remote repositories, move them around, create start scripts and assemble an application distribution.</p>
+</div>
+<div class="paragraph">
+<p>We are using Gradle to prepare a Java application into the build/fopub directory that the fopub script can execute.</p>
+</div>
+<div class="paragraph">
+<p>You may be wondering why Gradle isn&#8217;t a prerequisite of this project.
+The answer is that the Gradle project provides a tool that can bootstrap Gradle from nothing.
+That tool, gradlew, is included with the project.
+It gets invoked the first time you run the fopub script.
+<strong>Magic.</strong></p>
+</div>
+<div class="paragraph">
+<p>And that&#8217;s essentially what this project is all about, <strong>magic</strong>.
+Converting from DocBook to PDF shouldn&#8217;t be hard.
+We are doing our best to hide those details so that it&#8217;s as simple as it should be.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="software-versions">Software versions</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Software Project</th>
+<th class="tableblock halign-left valign-top">Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apache FOP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DocBook XSL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.78.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apache Commons XML Resolver</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Xalan</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.6.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">XSLTHL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.1.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gradle</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.7</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="contributing">Contributing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the spirit of free software, <em>everyone</em> is encouraged to help improve this project.</p>
+</div>
+<div class="paragraph">
+<p>To contribute code, simply fork the project on GitHub, hack away and send a pull request with your proposed changes.</p>
+</div>
+<div class="paragraph">
+<p>Feel free to use the <a href="https://github.com/asciidoctor/asciidoctor-fopub/issues">issue tracker</a> or <a href="http://discuss.asciidoctor.org">Asciidoctor mailing list</a> to provide feedback or suggestions in other ways.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="authors">Authors</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>asciidoctor-fopub</strong> was written by <a href="https://github.com/mojavelinux">Dan Allen</a>.
+It builds on prior work done by authors of the <a href="http://asciidoc.org">AsciiDoc</a>, <a href="https://github.com/pressgang/jdocbook-core">jDocBook</a> and <a href="http://www.jboss.org/pressgang">PressGang</a> projects.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="copyright">Copyright</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Copyright &#169; 2013 Dan Allen.
+Free use of this software is granted under the terms of the MIT License.</p>
+</div>
+<div class="paragraph">
+<p>See the <a href="LICENSE">LICENSE</a> file for details.</p>
+</div>
+</div>
+</div>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="" style="background-image: url(https://avatars.githubusercontent.com/u/1145187?v=3)"><span class="hidden">'s Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href=""></a></h4>
+
+                    <p>Read <a href="">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    
+                    
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/share?text=asciidoctor-fopub&amp;url=https://4711.github.io/hubpress.io/2015/04/30/asciidoctor-fopub.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://4711.github.io/hubpress.io/2015/04/30/asciidoctor-fopub.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://4711.github.io/hubpress.io/2015/04/30/asciidoctor-fopub.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="https://4711.github.io/hubpress.io">My Blog</a> &copy; 2015</section>
+        <section class="poweredby">Proudly published with <a href="http://hubpress.io">HubPress</a></section>
+    </footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//4711.github.io/hubpress.io/themes/Casper/assets/js/jquery.fitvids.js?v=1.0.0"></script>
+    <script type="text/javascript" src="//4711.github.io/hubpress.io/themes/Casper/assets/js/index.js?v=1.0.0"></script>
+
+</body>
+</html>
